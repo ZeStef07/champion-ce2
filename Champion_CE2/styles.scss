@@ -1,0 +1,292 @@
+/* ==========================================================
+   VARIABLES & COULEURS GLOBALES
+   ========================================================== */
+$primary-color: #f97316;       /* Orange chaleureux */
+$primary-hover: #ea580c;
+$bg-color: #f8fafc;            /* Fond global très clair */
+$card-bg: #ffffff;             /* Fond des cartes */
+$text-color: #1e293b;          /* Texte principal sombre */
+$border-color: #cbd5e1;        /* Bordures douces */
+$success-color: #22c55e;       /* Vert succès */
+$error-color: #ef4444;         /* Rouge erreur */
+$font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+
+/* ==========================================================
+   RESET & MISE EN PAGE GÉNÉRALE
+   ========================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family;
+  background-color: $bg-color;
+  color: $text-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* Conteneur principal de l'application */
+.app-container {
+  width: 100%;
+  max-width: 900px;
+  background-color: $card-bg;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  h1 {
+    font-size: 1.8rem;
+    color: $text-color;
+    margin-bottom: 0.3rem;
+  }
+  p {
+    color: #64748b;
+    font-size: 1rem;
+  }
+}
+
+/* ==========================================================
+   NAVIGATION & ONGLETS (Tab-btn & Subtab-btn)
+   ========================================================== */
+.tabs-nav, .exercise-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.tab-btn, .subtab-btn {
+  background-color: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: $text-color;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #cbd5e1;
+  }
+
+  &.active {
+    background-color: $primary-color;
+    color: white;
+  }
+}
+
+/* Gestion de l'affichage des onglets de contenu */
+.tab-content {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+/* ==========================================================
+   BOUTONS D'ACTION (Recommencer & Valider)
+   ========================================================== */
+.btn-restart {
+  background-color: #f1f5f9;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: $text-color;
+  transition: background-color 0.2s;
+  margin-bottom: 1rem;
+
+  &:hover {
+    background-color: #e2e8f0;
+  }
+}
+
+.action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  align-items: center;
+}
+
+.btn-submit {
+  background-color: $success-color;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #16a34a;
+  }
+}
+
+/* ==========================================================
+   GRILLES DE CONTENU (Maths, Orthographe, Anglais)
+   ========================================================== */
+.maths-grid, .words-grid, .english-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* ⚠️ SPÉCIFIQUE PROBLÈMES : Forcé en colonne unique sur toute la largeur */
+#maths-container.maths-grid.problems-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .math-card {
+    width: 100%;
+    max-width: 100%;
+    align-items: stretch;
+  }
+}
+
+/* Carte de question individuelle (Maths / Anglais) */
+.math-card, .english-card {
+  background-color: $card-bg;
+  border: 2px solid $border-color;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  transition: border-color 0.3s, background-color 0.3s;
+
+  &.correct {
+    border-color: $success-color;
+    background-color: #f0fdf4;
+  }
+
+  &.incorrect {
+    border-color: $error-color;
+    background-color: #fef2f2;
+  }
+}
+
+/* ==========================================================
+   CHAMPS DE SAISIE & INPUTS
+   ========================================================== */
+input[type="text"], input[type="number"] {
+  font-family: inherit;
+  font-size: 1rem;
+  border: 2px solid $border-color;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+  background-color: #fff;
+  color: $text-color;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: $primary-color;
+  }
+}
+
+/* Suppression des flèches pour les inputs numériques */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Icônes de feedback (✅ / ❌) */
+.feedback-icon {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Score global */
+.score-display {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: $text-color;
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN (SMARTPHONES & PETITS ÉCRANS)
+   ========================================================== */
+@media (max-width: 600px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .app-container {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .tabs-nav, .exercise-selector {
+    gap: 0.3rem;
+  }
+
+  .tab-btn, .subtab-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    flex: 1;
+    text-align: center;
+  }
+
+  .maths-grid, .words-grid, .english-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .math-card, .english-card {
+    padding: 0.8rem;
+  }
+}
+
+/* ==========================================================
+   STYLE SPÉCIFIQUE POUR LES INPUTS D'ORTHOGRAPHE
+   ========================================================== */
+.ortho-input {
+  width: 45px !important;       /* Taille compacte adaptée pour 1 ou 2 lettres */
+  min-width: 45px;
+  max-width: 50px;
+  text-align: center;           /* Centre le 's' ou 'ss' saisi */
+  padding: 0.3rem 0.2rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+/* Ajustement pour que le texte et l'input s'alignent proprement sur la ligne */
+.word-card, .ortho-card {       /* Ajuste selon le nom de ta classe de carte ortho */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
