@@ -1,10 +1,12 @@
 // js/modules/maths.js
 import { configData } from '../config.js';
 import { shuffleArray, removeAccents } from '../utils.js';
+import { launchConfetti } from '../confettis.js';
 import { generateOperationCard } from './maths/operations.js';
 import { generatePerimetreCard } from './maths/perimetres.js';
 import { generateFractionCard } from './maths/fractions.js';
 import { generateProblemCard } from './maths/problemes.js';
+import { generateNumerationCard } from './maths/numeration.js';
 
 function getActiveProblemTypes() {
   const weights = configData.maths.poids_problemes;
@@ -24,11 +26,9 @@ export function initMaths(subType = 'operations') {
   if (cleanType === 'problemes') {
     count = 3;
     container.classList.add('problems-layout');
-  } else if (cleanType === 'perimetres') {
+  } else if (cleanType === 'perimetres' || cleanType === 'fractions' || cleanType === 'numeration') {
     count = 5;
     container.classList.remove('problems-layout');
-  } else if (cleanType === 'fractions') {
-    count = 5
   }
 
   // Gestion de la non-redondance pour les problèmes
@@ -51,6 +51,8 @@ export function initMaths(subType = 'operations') {
     } else if (cleanType === 'problemes') {
       const assignedType = problemTypesList[i % problemTypesList.length] || 'billes';
       generateProblemCard(card, i, assignedType);
+    } else if (cleanType === 'numeration') {
+      generateNumerationCard(card, i);
     }
 
     container.appendChild(card);
@@ -109,6 +111,37 @@ export function initMaths(subType = 'operations') {
           icon.textContent = `❌ (${expectedNum}/${totalCells})`;
         }
       } 
+      else if (card.dataset.type === 'numeration-to-cdu') {
+        const userC = parseInt(card.querySelector('.c-input').value.trim(), 10);
+        const userD = parseInt(card.querySelector('.d-input').value.trim(), 10);
+        const userU = parseInt(card.querySelector('.u-input').value.trim(), 10);
+        const expC = parseInt(card.dataset.ansC, 10);
+        const expD = parseInt(card.dataset.ansD, 10);
+        const expU = parseInt(card.dataset.ansU, 10);
+
+        if (userC === expC && userD === expD && userU === expU) {
+          isCardCorrect = true;
+          card.className = 'math-card correct';
+          icon.textContent = '✅';
+        } else {
+          card.className = 'math-card incorrect';
+          icon.textContent = `❌ (${expC}c ${expD}d ${expU}u)`;
+        }
+      }
+      else if (card.dataset.type === 'numeration-from-cdu') {
+        const input = card.querySelector('.num-ans-input');
+        const expected = parseInt(card.dataset.answer, 10);
+        const userVal = parseInt(input.value.trim(), 10);
+
+        if (!isNaN(userVal) && userVal === expected) {
+          isCardCorrect = true;
+          card.className = 'math-card correct';
+          icon.textContent = '✅';
+        } else {
+          card.className = 'math-card incorrect';
+          icon.textContent = `❌ (${expected})`;
+        }
+      }
       else if (card.dataset.type && card.dataset.type.startsWith('prob-')) {
         let allSubCorrect = true;
         if (card.dataset.ans3 !== undefined) {
@@ -158,7 +191,12 @@ export function initMaths(subType = 'operations') {
       if (isCardCorrect) correctCount++;
     });
 
-    scoreBox.textContent = `Score : ${correctCount} / ${count}`;
+    scoreBox.textContent = `Score : ${correctCount}/${count}`;
+
+    // 👈 Déclenchement des confettis si tout est correct
+    if (correctCount === count && count > 0) {
+      launchConfetti();
+    }
   };
 
   // Bouton Recommencer

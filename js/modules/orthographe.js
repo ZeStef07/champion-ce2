@@ -1,6 +1,7 @@
 // js/modules/orthographe.js
 import { configData } from '../config.js';
 import { shuffleArray } from '../utils.js';
+import { launchConfetti } from '../confettis.js';
 
 export function initOrthographe() {
   const container = document.getElementById('ortho-container');
@@ -39,7 +40,12 @@ export function initOrthographe() {
         icon.textContent = `❌ (${expected})`;
       }
     });
-    scoreBox.textContent = `Score : ${correctCount}/10`;
+    const totalCount = 10;
+    scoreBox.textContent = `Score : ${correctCount}/${totalCount}`;
+    
+    if (correctCount === totalCount && totalCount > 0) {
+      launchConfetti();
+    }
   };
 
   // Bouton Recommencer

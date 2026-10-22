@@ -1,6 +1,7 @@
 // js/modules/anglais.js
 import { configData } from '../config.js';
 import { shuffleArray, getRandomInt, removeAccents } from '../utils.js';
+import { launchConfetti } from '../confettis.js';
 
 export function initAnglais() {
   const container = document.getElementById('english-container');
@@ -75,7 +76,12 @@ export function initAnglais() {
         icon.textContent = `❌ (${expected})`;
       }
     });
-    scoreBox.textContent = `Score : ${correctCount}/10`;
+    const totalCount = 10;
+    scoreBox.textContent = `Score : ${correctCount}/${totalCount}`;
+
+    if (correctCount === totalCount && totalCount > 0) {
+      launchConfetti();
+    }
   };
 
   // Bouton Recommencer
